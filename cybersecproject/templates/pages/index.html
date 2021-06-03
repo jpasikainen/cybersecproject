@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Welcome</h1>
+        {% if request.session.username %}
+        <a href="{% url 'profile' %}" style="float:right">Profile</a>
+        <form action="/logout" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Logout" />
+        </form>
+        {% else %}
+        <form action="/login" method="GET">
+            {% csrf_token %}
+            <input type="submit" value="Login" />
+        </form>
+        {% endif %}
+
+        <br />
+
+        {% if request.session.username %}
+        <form action="/post" method="POST" id="post_form">
+            {% csrf_token %}
+            <textarea form="post_form" rows="3" cols="100" name="body" placeholder="Write something nice here..."></textarea>
+            <br />
+            <input type="submit" value="Publish!" />
+        </form>
+        {% endif %}
+
+        <br />
+        <hr />
+
+        {% for post in posts %}
+        <div style="word-break: break-all;">
+            <h5>@{{post.author}}</h5>
+            <p>{{post.body|safe}}</p> <!-- Flaw 4 -->
+        </div>
+        <hr />
+        {% endfor %}
+    </body>
+</html>
