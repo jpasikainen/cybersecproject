@@ -13,6 +13,10 @@
             {% csrf_token %}
             <input type="submit" value="Login" />
         </form>
+        <form action="/register" method="GET">
+            {% csrf_token %}
+            <input type="submit" value="Register" />
+        </form>
         {% endif %}
 
         <br />
