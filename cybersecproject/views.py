@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
 from .models import Accounts, Posts
+import logging
+
+logger = logging.getLogger(__name__)
 
 def home_view(request):
     return render(request, "pages/index.html", {"posts": Posts.objects.all()})
@@ -22,6 +25,8 @@ def login_view(request):
             if cursor.fetchone()[0] > 0:
                 request.session["username"] = username
                 return redirect("/")
+            # Flaw 5
+            #logger.error(request.META.get("REMOTE_ADDR"))
             return HttpResponse("Wrong password or username")
     
     return render(request, "pages/login.html", {})
