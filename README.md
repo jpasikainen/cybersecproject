@@ -11,7 +11,7 @@ in the project root.
 ## Analysis
 Link https://github.com/jpasikainen/cybersecproject
 
-Installation instructions: clone the project, https://github.com/jpasikainen/cybersecproject/ , using git or by downloading it directly from the GitHub repository. Execute command "python migrate.py runserver" at the project root to start the server locally and test the project. The project should run on machines that have the prviously installed dependencies used on the course.
+Installation instructions: clone the project, https://github.com/jpasikainen/cybersecproject/ , using git or by downloading it directly from the GitHub repository. Execute command "python migrate.py runserver" at the project root to start the server locally and test the project. The project should run on machines that have the previously installed dependencies used on the course.
 
 By default the application does not include any posts or accounts. There is no special priviledges on admin accounts. By default the site is accessible at http://localhost:8000/
 
