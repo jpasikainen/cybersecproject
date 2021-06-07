@@ -9,17 +9,28 @@ python3 migrate.py runserver
 in the project root.
 
 ## Analysis
+# Cyber Security Base 2021 Project
+The web project is a site where the users can write micro blogs.
+
+## Running
+Make sure you have Django and python3 installed. Start server by running
+```
+python3 migrate.py runserver
+```
+in the project root.
+
+## Analysis
 Link https://github.com/jpasikainen/cybersecproject
 
 Installation instructions: clone the project, https://github.com/jpasikainen/cybersecproject/ , using git or by downloading it directly from the GitHub repository. Execute command "python migrate.py runserver" at the project root to start the server locally and test the project. The project should run on machines that have the previously installed dependencies used on the course.
 
-By default the application does not include any posts or accounts. There is no special priviledges on admin accounts. By default the site is accessible at http://localhost:8000/
+By default the application does not include any posts or accounts. There is no special privileges on admin accounts. By default the site is accessible at http://localhost:8000/
 
 FLAW 1:
 
 https://github.com/jpasikainen/cybersecproject/blob/3d3f5e6890592ebc493f6ae9dbe1cdd86e668142/cybersecproject/settings.py#L23
 
-A6:2017-Security Misconfiguration. The project was created using the django starter template which preconfigures the project for general use. This includes the creation of project_name/settings.py file which includes the configuration settings. This file is present at the project git repository. The most sensitive exposed information is the SECRET_KEY variable that is used for cryptographic signing. Exposing it "can lead to privilege escalation and remote code execution vulnerabilities". (https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-SECRET_KEY)
+A6:2017-Security Misconfiguration. The project was created using the Django starter template which preconfigures the project for general use. This includes the creation of project_name/settings.py file which includes the configuration settings. This file is present at the project git repository. The most sensitive exposed information is the SECRET_KEY variable that is used for cryptographic signing. Exposing it "can lead to privilege escalation and remote code execution vulnerabilities". (https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-SECRET_KEY)
 
 Fortunately, this is a very simple vulnerability to fix. For example, the file can be excluded from the repository on the .gitignore file or be regenerated on the production machine. However, if the key got exposed at any point, it must be replaced.
 
@@ -35,15 +46,15 @@ FLAW 3:
 
 https://github.com/jpasikainen/cybersecproject/blob/dedd481aa5d7c6e949b07bae7e308d39c86e7e85/cybersecproject/views.py#L66
 
-A5:2017-Broken Access Control. Creating an account with a space at the end or the beginning of the username allows impresonation. Now the user with this type of name has the access on the profiles of user with the same name not containing the space. The profile page for each user displays their credentials which is used to make the point why this matters. In some other web application, it could be the personal API key for example.
+A5:2017-Broken Access Control. Creating an account with a space at the end or the beginning of the username allows impersonation. Now the user with this type of name has the access on the profiles of user with the same name not containing the space. The profile page for each user displays their credentials which is used to make the point why this matters. In some other web application, it could be the personal API key for example.
 
-The issue is caused by strip function when matching profile name. Strip function removes the whitespace around a string. The fix is easy as taking it out. Alternatively, it can be left there and prevent creating accounts that abuse this vulnerability.
+The issue is caused by strip function when matching profile name. Strip function removes the white-space around a string. The fix is easy as taking it out. Alternatively, it can be left there and prevent creating accounts that abuse this vulnerability.
 
 FLAW 4:
 
 https://github.com/jpasikainen/cybersecproject/blob/dedd481aa5d7c6e949b07bae7e308d39c86e7e85/cybersecproject/templates/pages/index.html#L35
 
-A8:2017-Insecure Deserialization. This is perhaps the worst vulnerability on the project. When creating a post, an user can write anything that a normal HTML site can parse. This includes executing JavaScript code when it is added inside script-tags. Just by entering the site a normal user gets exposed to the vulnerability when the malicious post is loaded. The text area input is limited to 300 characters on the server-side, but an attacker can use that short space to execute code from their server. A very plain way to exploit this is to redirect the user to a maliciuous site.
+A8:2017-Insecure Deserialization. This is perhaps the worst vulnerability on the project. When creating a post, an user can write anything that a normal HTML site can parse. This includes executing JavaScript code when it is added inside script-tags. Just by entering the site a normal user gets exposed to the vulnerability when the malicious post is loaded. The text area input is limited to 300 characters on the server-side, but an attacker can use that short space to execute code from their server. A very plain way to exploit this is to redirect the user to a malicious site.
 
 This can be fixed by sanitizing the user input or by rendering everything as text. In that case, HTML tags would be visible and no JavaScript gets executed. In this particular project, the issue is caused by overriding the default setting of escaping HTML with the filter "safe". Removing it fixes the issue, but now the users cannot use formatting on their posts. Safe filter should never be used on data from the users.
 
